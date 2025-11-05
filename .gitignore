@@ -42,3 +42,7 @@ venv/
 
 # === GLASS results (not tracked) ===
 methods/GLASS/results/
+
+
+# === Results (local only) ===
+methods/PATCHCORE/results/
