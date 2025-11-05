@@ -1,4 +1,4 @@
-# === Ігнорування великих і службових файлів ===
+# === Ігнорування службових та великих файлів ===
 __pycache__/
 *.pyc
 *.pyo
@@ -15,13 +15,22 @@ __pycache__/
 *.tar.xz
 
 # === Дані ===
-datasets/
-experiments/
-runs/
-outputs/
-checkpoints/
+datasets/*
+!datasets/.gitkeep
 
-# === Середовище ===
+experiments/*
+!experiments/.gitkeep
+
+runs/*
+!runs/.gitkeep
+
+outputs/*
+!outputs/.gitkeep
+
+checkpoints/*
+!checkpoints/.gitkeep
+
+# === Середовище та IDE ===
 .env
 *.ipynb_checkpoints/
 venv/
