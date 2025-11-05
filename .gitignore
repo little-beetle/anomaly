@@ -1,0 +1,30 @@
+# === Ігнорування великих і службових файлів ===
+__pycache__/
+*.pyc
+*.pyo
+*.DS_Store
+*.log
+*.pth
+*.pt
+*.onnx
+*.npz
+*.npy
+*.zip
+*.tar
+*.tar.gz
+*.tar.xz
+
+# === Дані ===
+datasets/
+experiments/
+runs/
+outputs/
+checkpoints/
+
+# === Середовище ===
+.env
+*.ipynb_checkpoints/
+venv/
+.dvc/
+.idea/
+.vscode/
