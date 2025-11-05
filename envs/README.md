@@ -9,3 +9,10 @@ This project uses **conda** or **pip** virtual environments.
 conda create -n anomaly_glass python=3.10
 conda activate anomaly_glass
 pip install -r envs/environment_glass.txt
+
+
+cd methods/GLASS
+
+chmod +x run_glass.sh
+
+bash run_glass.sh

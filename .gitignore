@@ -39,3 +39,6 @@ venv/
 .dvc/
 .idea/
 .vscode/
+
+# === GLASS results (not tracked) ===
+methods/GLASS/results/
