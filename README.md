@@ -1,36 +1,44 @@
 
-# 🧠 Anomaly Detection — GLASS Method Reproduction
 
-This repository reproduces and analyzes the **GLASS (Generative Latent Anomaly Synthesis)** method for unsupervised anomaly detection using the **MVTec AD dataset**.  
-It establishes a verified baseline for future comparison with other anomaly detection methods such as PatchCore, PaDiM, and SPADE.
+# 🧠 Anomaly Detection — GLASS & PatchCore Methods
+
+This repository reproduces and compares **unsupervised anomaly detection methods** on the **MVTec AD dataset**, focusing on industrial defect detection.
+Currently, it includes verified implementations of **GLASS** and **PatchCore**, with consistent environments and result storage for future benchmarking.
 
 ---
 
 ## 🚀 Overview
 
-- **Goal:** reproduce and validate the GLASS method on MVTec AD.  
-- **Dataset:** [MVTec Anomaly Detection Dataset](https://www.mvtec.com/company/research/datasets/mvtec-anomaly-detection).  
-- **Backend:** Apple Metal (MPS) or CUDA (GPU).  
-- **Focus:** *bottle* category as the baseline case.
+* **Goal:** reproduce and validate modern anomaly detection methods on MVTec AD.
+* **Dataset:** [MVTec Anomaly Detection Dataset](https://www.mvtec.com/company/research/datasets/mvtec-anomaly-detection).
+* **Backends:** Apple Metal (MPS), CUDA, or CPU.
+* **Focus category:** *bottle* — used as a baseline across all methods.
 
 ---
 
-## ⚙️ Setup Instructions
+## ⚙️ Environment Setup
 
 ### 1. Create environment
+
 ```bash
 conda create -n anomaly_glass python=3.10
 conda activate anomaly_glass
 pip install -r envs/environment_glass.txt
-````
+```
 
-### 2. Verify installation
+or (for full setup including anomalib and GLASS)
+
+```bash
+pip install -r envs/environment_full.txt
+```
+
+### 2. Verify PyTorch installation
 
 ```bash
 python -c "import torch; print(torch.__version__)"
 ```
 
-Expected output (for MPS backend):
+Expected output:
 
 ```
 2.9.0
@@ -38,20 +46,22 @@ Expected output (for MPS backend):
 
 ---
 
-## ▶️ Run GLASS
+## ▶️ Run Methods
 
-### Option 1: via shell script
+### 🔹 GLASS
+
+**Option 1: via shell script**
 
 ```bash
 cd methods/GLASS
 bash run_glass.sh
 ```
 
-### Option 2: manually
+**Option 2: manual run**
 
 ```bash
-CUDA_VISIBLE_DEVICES="" python main.py \
-  dataset --subdatasets bottle mvtec ../../datasets/mvtec ../../datasets/mvtec \
+python methods/GLASS/main.py \
+  dataset --subdatasets bottle mvtec ./datasets/mvtec ./datasets/mvtec \
   net \
   --step 1 \
   --p 0 \
@@ -66,35 +76,51 @@ CUDA_VISIBLE_DEVICES="" python main.py \
 
 ---
 
+### 🔹 PatchCore
+
+```bash
+python methods/PATCHCORE/run_patchcore.py
+```
+
+**Results:**
+Saved automatically to:
+
+```
+methods/PATCHCORE/results/
+```
+
+and exported as:
+
+* `bottle_metrics.json`
+* `bottle_metrics.csv`
+
+---
+
 ## 📊 Results (Baseline)
 
-| Backbone | p | AUROC (Image) | AUROC (Pixel) | PRO   | Notes           |
-| -------- | - | ------------- | ------------- | ----- | --------------- |
-| ResNet18 | 0 | **99.05**     | 79.59         | 75.59 | Stable baseline |
-
-**Observation:**
-
-* GLASS achieves near-perfect *image-level* AUROC (~99%).
-* Pixel-level accuracy depends on feature layer (`layer2`) and patch size.
-* MPS backend runs 30–40% faster than CPU and comparable to CUDA.
+| Method    | Backbone | image_AUROC | image_F1Score | pixel_AUROC | pixel_F1Score | pixel_PRO | Notes |
+|-----------|----------|-------------|---------------|-------------|---------------|-----------|-------|
+| PatchCore | resnet18 | **1.0000**  | 0.9920        | **0.9722**  | 0.6748        | —         | CPU run |
+| GLASS     | resnet18 | **0.9905**  | —             | 0.7959      | —             | 0.7559    | best_epoch=0 |
 
 ---
 
 ## 🎯 Conclusions
 
-* ✅ GLASS successfully reproduced on MVTec AD (*bottle* subset).
-* ✅ Achieved **image_AUROC ≈ 99.05**, confirming method correctness.
-* ⚙️ Verified stable operation on **Apple Metal (MPS)** backend.
-* 🚀 Provides a solid baseline for ensemble and comparative studies.
+* ✅ Both **GLASS** and **PatchCore** were successfully reproduced on the *MVTec AD* dataset (category **bottle**).  
+* 🔹 **GLASS** achieved strong *image-level* performance (image_AUROC ≈ 0.99), confirming correct reproduction of the ECCV 2024 results.  
+* 🔹 **PatchCore** outperformed GLASS at the *pixel-level* (pixel_AUROC ≈ 0.97 vs 0.79), providing more accurate localization of defects.  
+* ⚙️ Verified stable operation on both **CPU** and **Apple Metal (MPS)** backends.  
+* 🚀 The project now provides a **unified, reproducible pipeline** for benchmarking and future ensemble experiments combining GLASS + PatchCore (and further methods like PaDiM or SPADE).
 
 ---
 
 ## 🔬 Next Steps
 
-* Integrate GLASS embeddings into ensemble framework.
-* Extend experiments to multiple MVTec categories.
-* Visualize anomaly heatmaps and uncertainty maps.
-* Compare ensemble vs. single-model performance.
+* Add **PaDiM**, **SPADE**, and **CFA** implementations in `/methods/`.
+* Develop unified ensemble evaluation (AUROC, PRO, F1).
+* Automate report generation for cross-model comparison.
+* Visualize heatmaps and uncertainty for interpretability.
 
 ---
 
@@ -107,23 +133,9 @@ CUDA_VISIBLE_DEVICES="" python main.py \
 
 ---
 
-## 🧩 Citation
+✅ **Summary:**
 
-```bibtex
-@inproceedings{cqylunlun2024glass,
-  title={GLASS: Generative Latent Anomaly Synthesis for Unsupervised Anomaly Detection},
-  author={Cui, Yulun and others},
-  booktitle={European Conference on Computer Vision (ECCV)},
-  year={2024}
-}
-```
+> This repository provides reproducible implementations of **GLASS** and **PatchCore** for anomaly detection on MVTec AD,
+> serving as a foundation for future ensemble-based experiments and benchmarking.
 
-```
-
----
-
-✅ **Summary:**  
-> This repository provides a verified implementation of the **GLASS** anomaly detection method,  
-> reproduces ECCV 2024 results, and establishes a stable baseline for future ensemble experiments.
-```
 
