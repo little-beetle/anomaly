@@ -17,6 +17,8 @@ __pycache__/
 # === Дані ===
 datasets/*
 !datasets/.gitkeep
+!datasets/README.md
+
 
 experiments/*
 !experiments/.gitkeep
